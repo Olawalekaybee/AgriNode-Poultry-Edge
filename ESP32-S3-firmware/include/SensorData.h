@@ -2,7 +2,8 @@
 
 #include <Arduino.h>
 
-struct SensorData {
+struct SensorData
+{
     float indoorTemperature = 0.0;
     float indoorHumidity = 0.0;
 
@@ -20,6 +21,9 @@ struct SensorData {
 
     String date = "";
     String time = "";
+
+    bool wifiConnected = false;
+    bool firebaseReady = false;
 
     unsigned long timestamp = 0;
 };

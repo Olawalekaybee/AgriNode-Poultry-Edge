@@ -1,0 +1,11 @@
+#pragma once
+
+#define I2C_SLAVE_ADDRESS 0x12
+#define I2C_SDA_PIN 27
+#define I2C_SCL_PIN 22
+
+#define I2C_BUFFER_SIZE 256
+
+#define DISPLAY_ROTATION 1
+#define DISPLAY_WIDTH 320
+#define DISPLAY_HEIGHT 240

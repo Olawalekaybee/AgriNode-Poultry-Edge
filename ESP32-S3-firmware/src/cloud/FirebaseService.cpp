@@ -42,6 +42,12 @@ void FirebaseService::connectWiFi() {
 }
 
 bool FirebaseService::upload(const SensorData& data) {
+    if (WiFi.status() != WL_CONNECTED) {
+        Serial.println("[Firebase] WiFi disconnected. Reconnecting...");
+        ready = false;
+        connectWiFi();
+    }
+
     if (!ready || !Firebase.ready()) {
         Serial.println("[Firebase] Not ready");
         return false;
@@ -67,6 +73,8 @@ bool FirebaseService::upload(const SensorData& data) {
     json.set("datetime/time", data.time);
 
     json.set("system/uptime_ms", data.timestamp);
+    json.set("system/wifi_connected", isWiFiConnected());
+    json.set("system/firebase_ready", isFirebaseReady());
 
     String path = "/poultry_monitoring/latest";
 
@@ -79,4 +87,12 @@ bool FirebaseService::upload(const SensorData& data) {
     Serial.println(fbdo.errorReason());
 
     return false;
+}
+
+bool FirebaseService::isWiFiConnected() const {
+    return WiFi.status() == WL_CONNECTED;
+}
+
+bool FirebaseService::isFirebaseReady() const {
+    return Firebase.ready();
 }

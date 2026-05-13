@@ -46,5 +46,8 @@ void PoultryMonitorApp::readSensors() {
     ldr.read(data);
     gps.read(data);
 
+    data.wifiConnected = firebase.isWiFiConnected();
+    data.firebaseReady = firebase.isFirebaseReady();
+
     data.timestamp = millis();
 }

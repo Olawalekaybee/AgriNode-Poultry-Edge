@@ -36,6 +36,8 @@ String DisplayBridge::buildPayload(const SensorData& data) {
     payload += "\"lng\":" + String(data.longitude, 6) + ",";
     payload += "\"sat\":" + String(data.gpsSatellites) + ",";
     payload += "\"gps\":" + String(data.gpsValid ? 1 : 0) + ",";
+    payload += "\"wifi\":" + String(data.wifiConnected ? 1 : 0) + ",";
+    payload += "\"fb\":" + String(data.firebaseReady ? 1 : 0) + ",";
     payload += "\"date\":\"" + data.date + "\",";
     payload += "\"time\":\"" + data.time + "\"";
     payload += "}";

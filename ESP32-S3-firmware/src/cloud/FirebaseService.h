@@ -5,10 +5,14 @@
 #include <Firebase_ESP_Client.h>
 #include "SensorData.h"
 
-class FirebaseService {
+class FirebaseService
+{
 public:
     void begin();
-    bool upload(const SensorData& data);
+    bool upload(const SensorData &data);
+
+    bool isWiFiConnected() const;
+    bool isFirebaseReady() const;
 
 private:
     FirebaseData fbdo;
