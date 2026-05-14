@@ -2,21 +2,31 @@
 #include "AppConfig.h"
 
 void PoultryMonitorApp::begin() {
-    Serial.println("Starting AgriNode Poultry Edge...");
+    Serial.println("[APP] Starting AgriNode Poultry Edge...");
 
     Wire.begin(I2C_SDA_PIN, I2C_SCL_PIN);
     Wire.setClock(I2C_FREQUENCY);
+    Serial.println("[APP] I2C initialized");
 
-    Serial.println("[I2C] Bus initialized");
-
+    Serial.println("[APP] Starting DHT22...");
     dht22.begin();
+
+    Serial.println("[APP] Starting SHT31...");
     sht31.begin();
+
+    Serial.println("[APP] Starting ADS1115/LDR...");
     ldr.begin();
+
+    Serial.println("[APP] Starting GPS...");
     gps.begin();
+
+    Serial.println("[APP] Starting display bridge...");
     display.begin();
+
+    Serial.println("[APP] Starting Firebase...");
     firebase.begin();
 
-    Serial.println("System initialized successfully.");
+    Serial.println("[APP] System initialized successfully.");
 }
 
 void PoultryMonitorApp::update() {

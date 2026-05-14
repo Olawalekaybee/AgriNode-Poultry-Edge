@@ -13,20 +13,21 @@ void FirebaseService::begin() {
     Firebase.begin(&config, &auth);
     Firebase.reconnectWiFi(true);
 
-    Serial.println("[Firebase] Initializing...");
+    Serial.println("[Firebase] Initialized in background mode");
 }
 
 void FirebaseService::connectWiFi() {
     WiFi.mode(WIFI_STA);
+    WiFi.setSleep(false);
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
     Serial.print("[WiFi] Connecting");
 
     unsigned long startAttempt = millis();
 
-    while (WiFi.status() != WL_CONNECTED && millis() - startAttempt < 20000) {
+    while (WiFi.status() != WL_CONNECTED && millis() - startAttempt < 8000) {
         Serial.print(".");
-        delay(500);
+        delay(250);
     }
 
     if (WiFi.status() == WL_CONNECTED) {
@@ -36,7 +37,7 @@ void FirebaseService::connectWiFi() {
         ready = true;
     } else {
         Serial.println();
-        Serial.println("[WiFi] Connection failed");
+        Serial.println("[WiFi] Connection failed. Continuing offline.");
         ready = false;
     }
 }

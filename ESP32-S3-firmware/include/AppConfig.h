@@ -17,8 +17,8 @@
 // MAIN I2C BUS
 // Used by SHT31, ADS1115, and CYD display bridge
 // =========================
-#define I2C_SDA_PIN 21
-#define I2C_SCL_PIN 22
+#define I2C_SDA_PIN 8
+#define I2C_SCL_PIN 9
 #define I2C_FREQUENCY 100000
 
 // CYD display board I2C slave address

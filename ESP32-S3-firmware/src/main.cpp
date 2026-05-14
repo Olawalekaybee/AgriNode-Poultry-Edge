@@ -1,15 +1,12 @@
 #include <Arduino.h>
-#include "app/PoultryMonitorApp.h"
-
-PoultryMonitorApp app;
 
 void setup() {
     Serial.begin(115200);
-    delay(1000);
-
-    app.begin();
+    delay(2000);
+    Serial.println("ESP32-S3 SERIAL TEST OK");
 }
 
 void loop() {
-    app.update();
+    Serial.println("heartbeat");
+    delay(1000);
 }
