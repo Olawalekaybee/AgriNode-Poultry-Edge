@@ -1,33 +1,39 @@
 <div align="center">
 
-# 🐓 AgriNode Poultry Edge
+#   AgriNode Poultry Edge
 
-### Distributed Embedded IoT Architecture for Smart Poultry Environmental Monitoring
+### Intelligent Distributed Embedded IoT Platform for Poultry Environmental Monitoring
 
-[![PlatformIO](https://img.shields.io/badge/PlatformIO-Embedded-orange?style=for-the-badge\&logo=platformio)](https://platformio.org/)
-[![ESP32-S3](https://img.shields.io/badge/ESP32--S3-N16R8-blue?style=for-the-badge\&logo=espressif)](https://www.espressif.com/)
-[![Firebase](https://img.shields.io/badge/Firebase-Realtime-yellow?style=for-the-badge\&logo=firebase)](https://firebase.google.com/)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)]()
+<p align="center">
+  <img src="https://img.shields.io/badge/ESP32--S3-N16R8-blue?style=for-the-badge&logo=espressif" />
+  <img src="https://img.shields.io/badge/PlatformIO-Embedded-orange?style=for-the-badge&logo=platformio" />
+  <img src="https://img.shields.io/badge/Firebase-Realtime-yellow?style=for-the-badge&logo=firebase" />
+  <img src="https://img.shields.io/badge/Architecture-Distributed-green?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Display-CYD%20320x240-red?style=for-the-badge" />
+</p>
+
+---
+
+### Edge Computing • Real-Time Telemetry • Smart Agriculture • Embedded Systems
 
 </div>
 
 ---
 
-# 📖 Overview
+# 📖 Project Overview
 
-AgriNode Poultry Edge is a professional distributed embedded IoT system designed for intelligent poultry farm environmental monitoring, cloud telemetry, and real-time dashboard visualization.
+AgriNode Poultry Edge is a professional distributed embedded IoT system engineered for intelligent poultry farm environmental monitoring, cloud telemetry synchronization, and real-time local visualization.
 
-The project uses an **ESP32-S3 N16R8 Rev 1.1** as the primary edge controller and a dedicated **CYD 320×240 display node** communicating over I2C.
+The platform combines:
 
-The system performs:
+- 🌡 Environmental sensing
+- 📍 GPS telemetry
+- ☁ Cloud synchronization
+- 📺 Edge dashboard visualization
+- 🔄 Distributed embedded communication
+- 📡 Real-time telemetry streaming
 
-* 🌡 Indoor temperature & humidity monitoring
-* 🌤 Outdoor temperature & humidity monitoring
-* 💡 Light intensity sensing
-* 📍 GPS location tracking
-* 🕒 GPS date & time synchronization
-* ☁ Firebase cloud telemetry upload
-* 📺 Real-time dashboard visualization
+The architecture uses an **ESP32-S3 N16R8 Rev 1.1** as the primary edge controller and a dedicated **CYD 320×240 display node** communicating over I2C.
 
 ---
 
@@ -36,25 +42,84 @@ The system performs:
 <div align="center">
 
 ```txt
-                    ┌─────────────────────┐
-                    │ Firebase RealtimeDB │
-                    └──────────┬──────────┘
-                               │ WiFi
-                               │
-                     ┌─────────▼─────────┐
-                     │ ESP32-S3 N16R8    │
-                     │ Edge Controller   │
-                     └─────────┬─────────┘
-                               │
-                        I2C Communication
-                               │
-                     ┌─────────▼─────────┐
-                     │ CYD Display Node  │
-                     │ ILI9341_2_DRIVER  │
-                     └───────────────────┘
+                    ┌──────────────────────────┐
+                    │ Firebase Realtime DB     │
+                    │ Cloud Telemetry Platform │
+                    └────────────┬─────────────┘
+                                 │
+                                 │ WiFi
+                                 │
+                   ┌─────────────▼─────────────┐
+                   │ ESP32-S3 Edge Controller  │
+                   │ Sensor Aggregation Engine │
+                   └─────────────┬─────────────┘
+                                 │
+                           I2C Telemetry Bus
+                                 │
+                   ┌─────────────▼─────────────┐
+                   │ CYD Dashboard Display     │
+                   │ ILI9341_2_DRIVER          │
+                   └───────────────────────────┘
 ```
 
 </div>
+
+---
+
+# 🔧 Core Features
+
+## Environmental Monitoring
+
+- Indoor temperature monitoring
+- Indoor humidity monitoring
+- Outdoor temperature monitoring
+- Outdoor humidity monitoring
+- Ambient light intensity sensing
+
+## Telemetry & Positioning
+
+- GPS location tracking
+- Satellite acquisition monitoring
+- UTC date synchronization
+- UTC time synchronization
+
+## Cloud Infrastructure
+
+- Firebase Realtime Database integration
+- WiFi telemetry upload
+- Real-time cloud synchronization
+
+## Embedded Display System
+
+- Distributed CYD display node
+- Real-time telemetry dashboard
+- I2C telemetry bridge
+- Live environmental visualization
+
+---
+
+# 🧠 Hardware Components
+
+| Component | Function |
+|---|---|
+| ESP32-S3 N16R8 Rev 1.1 | Main edge controller |
+| CYD 320×240 Display | Visualization node |
+| DHT22 | Indoor temperature & humidity |
+| SHT31 | Outdoor temperature & humidity |
+| ADS1115 | Precision ADC |
+| LDR | Light intensity sensing |
+| GPS Module | Location, date & time |
+
+---
+
+# ⚡ Embedded Interfaces
+
+| Interface | Connected Devices |
+|---|---|
+| GPIO | DHT22 |
+| I2C | SHT31, ADS1115, CYD Display |
+| UART | GPS Module |
+| WiFi | Firebase Cloud |
 
 ---
 
@@ -83,54 +148,45 @@ AgriNode-Poultry-Edge/
 
 ---
 
-# ⚙ Main Hardware
+# 🧩 Firmware Architecture
 
-| Component              | Purpose                        |
-| ---------------------- | ------------------------------ |
-| ESP32-S3 N16R8 Rev 1.1 | Main edge controller           |
-| CYD 320×240 TFT        | Display dashboard node         |
-| DHT22                  | Indoor temperature & humidity  |
-| SHT31                  | Outdoor temperature & humidity |
-| ADS1115                | Precision ADC                  |
-| LDR                    | Light intensity sensing        |
-| GPS Module             | Location, date & time          |
+## ESP32-S3 Edge Firmware
 
----
+Responsible for:
 
-# 🧠 ESP32-S3 Edge Firmware
+- Sensor acquisition
+- GPS telemetry parsing
+- Firebase communication
+- I2C telemetry transmission
+- Environmental data processing
+- System scheduling
 
-The ESP32-S3 firmware is responsible for:
+### Major Modules
 
-* Sensor aggregation
-* GPS telemetry
-* Firebase communication
-* I2C display communication
-* Cloud upload scheduling
-* Environmental data processing
-
-## Interfaces
-
-| Interface | Devices                     |
-| --------- | --------------------------- |
-| GPIO      | DHT22                       |
-| I2C       | SHT31, ADS1115, CYD Display |
-| UART      | GPS                         |
-| WiFi      | Firebase                    |
+```txt
+PoultryMonitorApp
+├── SensorManager
+├── DisplayBridge
+├── FirebaseService
+├── GPSManager
+└── TelemetryScheduler
+```
 
 ---
 
-# 📺 CYD Display Firmware
+## CYD Display Firmware
 
-The CYD board functions as a dedicated visualization node.
+Dedicated telemetry visualization node.
 
-## Responsibilities
+### Responsibilities
 
-* Receives telemetry packets over I2C
-* Parses environmental sensor data
-* Renders dashboard UI
-* Displays real-time poultry conditions
+- Receives I2C telemetry packets
+- Parses JSON telemetry
+- Renders dashboard UI
+- Displays environmental conditions
+- Displays network/system status
 
-## Display Driver
+### Display Driver
 
 ```txt
 ILI9341_2_DRIVER
@@ -138,45 +194,49 @@ ILI9341_2_DRIVER
 
 ---
 
-# 🔄 Communication Flow
+# 🔄 Data Flow
 
 ```txt
 Sensors
    ↓
-ESP32-S3 Edge Node
-   ↓ I2C JSON Packet
-CYD Display Node
+ESP32-S3 Sensor Manager
    ↓
-Dashboard Rendering
+Telemetry Processing
+   ↓
+├── Firebase Cloud Upload
+│
+└── I2C Telemetry Bridge
+         ↓
+    CYD Dashboard Display
 ```
 
 ---
 
-# ☁ Firebase Telemetry
+# ☁ Firebase Integration
 
-The ESP32-S3 uploads telemetry to Firebase Realtime Database.
+Telemetry is uploaded to Firebase Realtime Database in real time.
 
-## Example Payload
+## Example Telemetry Payload
 
 ```json
 {
   "indoor": {
-    "temperature": 31.4,
-    "humidity": 72.1
+    "temperature": 29.6,
+    "humidity": 46.3
   },
   "outdoor": {
-    "temperature": 29.8,
-    "humidity": 68.3
+    "temperature": 30.3,
+    "humidity": 64.5
   },
   "light": {
-    "raw": 14320,
-    "voltage": 1.79
+    "raw": 9,
+    "voltage": 0.00
   },
   "gps": {
-    "valid": true,
-    "latitude": 9.0765,
-    "longitude": 7.3986,
-    "satellites": 8
+    "valid": false,
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "satellites": 0
   }
 }
 ```
@@ -185,50 +245,40 @@ The ESP32-S3 uploads telemetry to Firebase Realtime Database.
 
 # 🛠 Development Environment
 
-| Tool              | Usage                    |
-| ----------------- | ------------------------ |
-| VS Code           | Development IDE          |
-| PlatformIO        | Embedded build system    |
+| Tool | Purpose |
+|---|---|
+| VS Code | Development IDE |
+| PlatformIO | Embedded build system |
 | Arduino Framework | ESP32 firmware framework |
-| Firebase          | Cloud backend            |
+| Firebase | Cloud telemetry backend |
 
 ---
 
-# 🚀 Current Status
+# 🚀 Build & Upload
 
-## ✅ ESP32-S3 Firmware
+## ESP32-S3 Firmware
 
-* Sensor acquisition implemented
-* GPS telemetry implemented
-* Firebase upload implemented
-* I2C display bridge implemented
-* Professional modular architecture implemented
+```bash
+cd ESP32-S3-firmware
+pio run -t upload
+pio device monitor
+```
 
-## 🚧 CYD Display Firmware
+## CYD Display Firmware
 
-* Project structure initialized
-* I2C communication architecture prepared
-* Dashboard renderer in progress
-
----
-
-# 🧩 Planned Features
-
-* 🔄 OTA firmware updates
-* 📊 Advanced poultry analytics
-* 🚨 Environmental threshold alerts
-* 🧠 Edge AI monitoring
-* 📡 Multi-node deployment
-* 💾 Offline buffering
-* 📱 Remote dashboard
-* 🎨 LVGL graphical UI
-* ⚙ GitHub CI/CD pipelines
+```bash
+cd "CYD display firmware"
+pio run -t upload
+pio device monitor
+```
 
 ---
 
 # 🔒 Security
 
-Sensitive credentials are excluded from Git tracking.
+Sensitive credentials are excluded from source control.
+
+## Ignored Files
 
 ```gitignore
 Secrets.h
@@ -238,10 +288,39 @@ Secrets.h
 
 Never commit:
 
-* WiFi credentials
-* Firebase secrets
-* API tokens
-* Certificates
+- WiFi credentials
+- Firebase secrets
+- API tokens
+- Certificates
+
+---
+
+# 📊 Current System Status
+
+| Module | Status |
+|---|---|
+| ESP32-S3 Firmware | ✅ Stable |
+| Sensor Acquisition | ✅ Operational |
+| GPS Telemetry | ✅ Operational |
+| Firebase Upload | ✅ Operational |
+| CYD Dashboard | ✅ Operational |
+| I2C Telemetry Bridge | ✅ Operational |
+| Distributed Architecture | ✅ Operational |
+
+---
+
+# 🛣 Future Roadmap
+
+- OTA firmware updates
+- LVGL graphical dashboard
+- Edge AI anomaly detection
+- Multi-node deployment
+- Offline telemetry buffering
+- Mobile monitoring dashboard
+- Remote firmware management
+- SD card local logging
+- CI/CD firmware pipelines
+- MQTT telemetry support
 
 ---
 
@@ -253,6 +332,8 @@ MIT License
 
 <div align="center">
 
-### Built with ❤️ using ESP32-S3, PlatformIO, and Firebase
+## Built with ESP32-S3, PlatformIO, Firebase & Embedded Systems Engineering
+
+### AgriNode Poultry Edge • Smart Agriculture IoT Platform
 
 </div>
