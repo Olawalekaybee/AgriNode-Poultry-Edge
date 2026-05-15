@@ -1,3 +1,9 @@
+---
+noteId: "113af7d04fb811f19a2115f6f620c5d5"
+tags: []
+
+---
+
 ## bmp2array4bit
 
 bmp2array4bit.py reads a bmp file, and creates C (or C++) code that contains two arrays for adding images to four-bit sprites.  See [Sprite_image_4bit](../../examples/Sprite/Sprite_image_4bit) for an example.

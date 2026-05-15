@@ -1,3 +1,9 @@
+---
+noteId: "113b1ee04fb811f19a2115f6f620c5d5"
+tags: []
+
+---
+
 <p align="center">
   <a href="https://arduinojson.org/"><img alt="ArduinoJson" src="https://arduinojson.org/images/logo.svg" width="200" /></a>
 </p>

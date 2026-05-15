@@ -1,8 +1,8 @@
 #pragma once
 
 #define I2C_SLAVE_ADDRESS 0x12
-#define I2C_SDA_PIN 27
-#define I2C_SCL_PIN 22
+#define I2C_SDA_PIN 22
+#define I2C_SCL_PIN 27
 
 #define I2C_BUFFER_SIZE 256
 

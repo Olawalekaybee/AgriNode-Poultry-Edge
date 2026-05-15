@@ -7,7 +7,8 @@ bool I2CReceiver::newDataAvailable = false;
 
 void I2CReceiver::begin()
 {
-    Wire.begin(I2C_SLAVE_ADDRESS, I2C_SDA_PIN, I2C_SCL_PIN);
+    // Wire.begin(I2C_SLAVE_ADDRESS, I2C_SDA_PIN, I2C_SCL_PIN);
+    Wire.begin((uint8_t)I2C_SLAVE_ADDRESS, I2C_SDA_PIN, I2C_SCL_PIN, 100000);
     Wire.onReceive(I2CReceiver::onReceiveHandler);
 
     Serial.print("[I2C] CYD slave started at address 0x");

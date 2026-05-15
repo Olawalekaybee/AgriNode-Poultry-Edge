@@ -1,12 +1,34 @@
 #include <Arduino.h>
+#include "app/PoultryMonitorApp.h"
 
-void setup() {
+PoultryMonitorApp app;
+
+void setup()
+{
     Serial.begin(115200);
     delay(2000);
-    Serial.println("ESP32-S3 SERIAL TEST OK");
+
+    Serial.println();
+    Serial.println("================================");
+    Serial.println("AgriNode Poultry Edge Booting...");
+    Serial.println("ESP32-S3 Firmware");
+    Serial.println("================================");
+
+    app.begin();
+
+    Serial.println("[MAIN] Application started successfully.");
 }
 
-void loop() {
-    Serial.println("heartbeat");
-    delay(1000);
+void loop()
+{
+    app.update();
+
+    static unsigned long lastHeartbeat = 0;
+    unsigned long now = millis();
+
+    if (now - lastHeartbeat >= 5000)
+    {
+        lastHeartbeat = now;
+        Serial.println("[MAIN] System running...");
+    }
 }
