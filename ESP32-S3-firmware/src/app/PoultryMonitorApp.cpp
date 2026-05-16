@@ -1,17 +1,26 @@
 #include "PoultryMonitorApp.h"
 #include "AppConfig.h"
 
-void PoultryMonitorApp::begin() {
-    Serial.println("[APP] Starting AgriNode Poultry Edge...");
+void PoultryMonitorApp::begin()
+{
+    Serial.println();
+    Serial.println("======================================");
+    Serial.println(" AgriNode Poultry Edge Booting...");
+    Serial.println("======================================");
 
+    pinMode(STATUS_LED_PIN, OUTPUT);
+    digitalWrite(STATUS_LED_PIN, LOW);
+
+    Serial.println("[APP] Initializing I2C...");
     Wire.begin(I2C_SDA_PIN, I2C_SCL_PIN);
     Wire.setClock(I2C_FREQUENCY);
 
-    Serial.println("[APP] I2C initialized");
+    Serial.print("[APP] SDA: ");
+    Serial.println(I2C_SDA_PIN);
 
-    // =========================
-    // Sensors
-    // =========================
+    Serial.print("[APP] SCL: ");
+    Serial.println(I2C_SCL_PIN);
+
     Serial.println("[APP] Starting DHT22...");
     dht22.begin();
 
@@ -21,90 +30,90 @@ void PoultryMonitorApp::begin() {
     Serial.println("[APP] Starting ADS1115/LDR...");
     ldr.begin();
 
-    // =========================
-    // GPS
-    // =========================
     Serial.println("[APP] Starting GPS...");
     gps.begin();
 
-    // =========================
-    // Display Bridge
-    // =========================
     Serial.println("[APP] Starting display bridge...");
     display.begin();
 
-    // =========================
-    // Cloud Services
-    // =========================
     Serial.println("[APP] Starting Firebase...");
     firebase.begin();
 
     Serial.println("[APP] Starting MQTT...");
     mqtt.begin();
 
+    Serial.println("[APP] Starting OTA...");
+    ota.begin();
+
     Serial.println("[APP] System initialized successfully.");
+    Serial.println("======================================");
 }
 
-void PoultryMonitorApp::update() {
-    gps.update();
+void PoultryMonitorApp::update()
+{
+    ota.update();
+
     mqtt.update();
+    gps.update();
 
     unsigned long now = millis();
 
-    // =========================
-    // Sensor Read Cycle
-    // =========================
-    if (now - lastSensorRead >= SENSOR_READ_INTERVAL_MS) {
+    if (now - lastSensorRead >= SENSOR_READ_INTERVAL_MS)
+    {
         lastSensorRead = now;
-
         readSensors();
     }
 
-    // =========================
-    // Display Update Cycle
-    // =========================
-    if (now - lastDisplayUpdate >= DISPLAY_REFRESH_INTERVAL_MS) {
+    if (now - lastDisplayUpdate >= DISPLAY_REFRESH_INTERVAL_MS)
+    {
         lastDisplayUpdate = now;
-
-        display.send(data);
+        updateDisplay();
     }
 
-    // =========================
-    // Firebase Upload Cycle
-    // =========================
-    if (now - lastFirebaseUpload >= FIREBASE_UPLOAD_INTERVAL_MS) {
+    if (now - lastFirebaseUpload >= FIREBASE_UPLOAD_INTERVAL_MS)
+    {
         lastFirebaseUpload = now;
-
-        firebase.upload(data);
+        uploadFirebase();
     }
 
-    // =========================
-    // MQTT Publish Cycle
-    // =========================
-    if (now - lastMqttPublish >= 5000) {
+    if (now - lastMqttPublish >= MQTT_PUBLISH_INTERVAL_MS)
+    {
         lastMqttPublish = now;
-
-        mqtt.publishTelemetry(data);
+        publishMqtt();
     }
+
+    if (now - lastHealthLog >= 15000)
+    {
+        lastHealthLog = now;
+        logSystemHealth();
+    }
+
+    yield();
 }
 
-void PoultryMonitorApp::readSensors() {
-    dht22.read(data);
-    sht31.read(data);
-    ldr.read(data);
-    gps.read(data);
+void PoultryMonitorApp::readSensors()
+{
+    unsigned long startTime = millis();
 
-    // =========================
-    // Connectivity Status
-    // =========================
+    dht22.read(data);
+    yield();
+
+    sht31.read(data);
+    yield();
+
+    ldr.read(data);
+    yield();
+
+    gps.read(data);
+    yield();
+
     data.wifiConnected = firebase.isWiFiConnected();
     data.firebaseReady = firebase.isFirebaseReady();
-
     data.timestamp = millis();
 
-    // =========================
-    // Debug Output
-    // =========================
+    digitalWrite(STATUS_LED_PIN, mqtt.isConnected() ? HIGH : LOW);
+
+#if ENABLE_DEBUG_LOGS
     Serial.println("-------- SENSOR DATA --------");
 
     Serial.print("Indoor Temperature: ");
@@ -139,5 +148,105 @@ void PoultryMonitorApp::readSensors() {
     Serial.print("MQTT Connected: ");
     Serial.println(mqtt.isConnected() ? "YES" : "NO");
 
+    Serial.print("[PERF] Sensor read took ");
+    Serial.print(millis() - startTime);
+    Serial.println(" ms");
+
     Serial.println("-----------------------------");
+#endif
+}
+
+void PoultryMonitorApp::updateDisplay()
+{
+    unsigned long startTime = millis();
+
+    display.send(data);
+    yield();
+
+#if ENABLE_DEBUG_LOGS
+    Serial.print("[PERF] Display update took ");
+    Serial.print(millis() - startTime);
+    Serial.println(" ms");
+#endif
+}
+
+void PoultryMonitorApp::uploadFirebase()
+{
+    if (!data.wifiConnected)
+    {
+#if ENABLE_DEBUG_LOGS
+        Serial.println("[Firebase] Upload skipped: WiFi disconnected");
+#endif
+        return;
+    }
+
+    if (!data.firebaseReady)
+    {
+#if ENABLE_DEBUG_LOGS
+        Serial.println("[Firebase] Upload skipped: Firebase not ready");
+#endif
+        return;
+    }
+
+    unsigned long startTime = millis();
+
+    firebase.upload(data);
+    yield();
+
+#if ENABLE_DEBUG_LOGS
+    Serial.print("[PERF] Firebase upload took ");
+    Serial.print(millis() - startTime);
+    Serial.println(" ms");
+#endif
+}
+
+void PoultryMonitorApp::publishMqtt()
+{
+    if (!mqtt.isConnected())
+    {
+#if ENABLE_DEBUG_LOGS
+        Serial.println("[MQTT] Publish skipped: MQTT disconnected");
+#endif
+        return;
+    }
+
+    unsigned long startTime = millis();
+
+    mqtt.publishTelemetry(data);
+    yield();
+
+#if ENABLE_DEBUG_LOGS
+    Serial.print("[PERF] MQTT publish took ");
+    Serial.print(millis() - startTime);
+    Serial.println(" ms");
+#endif
+}
+
+void PoultryMonitorApp::logSystemHealth()
+{
+#if ENABLE_DEBUG_LOGS
+    Serial.println("-------- SYSTEM HEALTH --------");
+
+    Serial.print("Uptime: ");
+    Serial.print(millis() / 1000);
+    Serial.println(" s");
+
+    Serial.print("Free Heap: ");
+    Serial.print(ESP.getFreeHeap());
+    Serial.println(" bytes");
+
+    Serial.print("WiFi RSSI: ");
+    Serial.print(WiFi.RSSI());
+    Serial.println(" dBm");
+
+    Serial.print("MQTT Connected: ");
+    Serial.println(mqtt.isConnected() ? "YES" : "NO");
+
+    if (ESP.getFreeHeap() < LOW_HEAP_WARNING_BYTES)
+    {
+        Serial.println("[WARN] Low heap memory detected");
+    }
+
+    Serial.println("-------------------------------");
+#endif
 }

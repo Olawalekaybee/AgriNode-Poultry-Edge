@@ -1,6 +1,8 @@
 #include "cloud/MQTTService.h"
 #include "Secrets.h"
 
+MQTTService* MQTTService::instance = nullptr;
+
 void MQTTService::begin() {
     wifiClient.setInsecure();
 
@@ -8,6 +10,9 @@ void MQTTService::begin() {
     client.setBufferSize(512);
     client.setKeepAlive(60);
     client.setSocketTimeout(15);
+
+    instance = this;
+    client.setCallback(mqttCallback);
 
     Serial.println("[MQTT] Service initialized");
 }
@@ -53,6 +58,14 @@ bool MQTTService::reconnect() {
         Serial.println("connected");
 
         client.publish(MQTT_STATUS_TOPIC, "online", true);
+
+        if (client.subscribe(MQTT_COMMAND_TOPIC, 1)) {
+            Serial.print("[MQTT] Subscribed to command topic: ");
+            Serial.println(MQTT_COMMAND_TOPIC);
+        } else {
+            Serial.println("[MQTT] Failed to subscribe to command topic");
+        }
+
         return true;
     }
 
@@ -84,6 +97,37 @@ bool MQTTService::publishTelemetry(const SensorData& data) {
 
 bool MQTTService::isConnected() {
     return client.connected();
+}
+
+void MQTTService::mqttCallback(char* topic, byte* payload, unsigned int length) {
+    if (instance != nullptr) {
+        instance->handleCommand(topic, payload, length);
+    }
+}
+
+void MQTTService::handleCommand(char* topic, byte* payload, unsigned int length) {
+    String message;
+
+    for (unsigned int i = 0; i < length; i++) {
+        message += static_cast<char>(payload[i]);
+    }
+
+    Serial.print("[MQTT] Command topic: ");
+    Serial.println(topic);
+
+    Serial.print("[MQTT] Command payload: ");
+    Serial.println(message);
+
+    if (message.indexOf("restart") >= 0) {
+        Serial.println("[MQTT] Restart command received. Restarting device...");
+        delay(1000);
+        ESP.restart();
+    }
+
+    if (message.indexOf("ping") >= 0) {
+        client.publish(MQTT_STATUS_TOPIC, "pong", false);
+        Serial.println("[MQTT] Ping command received. Pong sent.");
+    }
 }
 
 String MQTTService::buildTelemetryPayload(const SensorData& data) {

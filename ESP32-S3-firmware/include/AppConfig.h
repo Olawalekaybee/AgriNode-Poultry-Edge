@@ -20,6 +20,7 @@
 #define I2C_SDA_PIN 8
 #define I2C_SCL_PIN 9
 #define I2C_FREQUENCY 100000
+#define STATUS_LED_PIN 2
 
 // CYD display board I2C slave address
 #define CYD_I2C_ADDRESS 0x12
@@ -27,6 +28,12 @@
 // =========================
 // TIMING
 // =========================
-#define FIREBASE_UPLOAD_INTERVAL_MS 10000
+#define FIREBASE_UPLOAD_INTERVAL_MS 30000
 #define DISPLAY_REFRESH_INTERVAL_MS 1000
 #define SENSOR_READ_INTERVAL_MS 2000
+
+#define MQTT_PUBLISH_INTERVAL_MS 10000
+#define FIREBASE_UPLOAD_INTERVAL_MS 30000
+
+#define LOW_HEAP_WARNING_BYTES 40000
+#define ENABLE_DEBUG_LOGS 1
