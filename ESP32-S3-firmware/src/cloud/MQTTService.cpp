@@ -21,7 +21,7 @@ void MQTTService::update() {
     if (!client.connected()) {
         unsigned long now = millis();
 
-        if (now - lastReconnectAttempt >= 5000) {
+        if (now - lastReconnectAttempt >= 30000) {
             lastReconnectAttempt = now;
             reconnect();
         }

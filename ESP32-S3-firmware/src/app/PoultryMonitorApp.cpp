@@ -1,6 +1,8 @@
 #include "PoultryMonitorApp.h"
 #include "AppConfig.h"
 
+#include <WiFi.h>
+
 void PoultryMonitorApp::begin()
 {
     Serial.println();
@@ -176,21 +178,29 @@ void PoultryMonitorApp::updateDisplay()
 
 void PoultryMonitorApp::uploadFirebase()
 {
-    if (!data.wifiConnected)
+    if (WiFi.status() != WL_CONNECTED)
     {
 #if ENABLE_DEBUG_LOGS
-        Serial.println("[Firebase] Upload skipped: WiFi disconnected");
+        Serial.println("[Firebase] Skipped: WiFi disconnected");
 #endif
+        data.wifiConnected = false;
+        data.firebaseReady = false;
         return;
     }
+
+    data.wifiConnected = true;
 
     if (!data.firebaseReady)
     {
 #if ENABLE_DEBUG_LOGS
-        Serial.println("[Firebase] Upload skipped: Firebase not ready");
+        Serial.println("[Firebase] Skipped: Firebase not ready");
 #endif
         return;
     }
+
+#if ENABLE_DEBUG_LOGS
+    Serial.println("[Firebase] Upload attempt...");
+#endif
 
     unsigned long startTime = millis();
 
@@ -240,8 +250,7 @@ void PoultryMonitorApp::logSystemHealth()
     Serial.println(" bytes");
 
     Serial.print("WiFi RSSI: ");
-    Serial.print(WiFi.RSSI());
-    Serial.println(" dBm");
+    Serial.println(WiFi.status() == WL_CONNECTED ? WiFi.RSSI() : 0);
 
     Serial.print("MQTT Connected: ");
     Serial.println(mqtt.isConnected() ? "YES" : "NO");

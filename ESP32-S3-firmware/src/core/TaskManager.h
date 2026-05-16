@@ -18,6 +18,7 @@ public:
 
 private:
     static TaskHandle_t networkTaskHandle;
+
     static bool started;
 
     static MQTTService* mqttService;

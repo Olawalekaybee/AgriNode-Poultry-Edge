@@ -1,4 +1,5 @@
 #include "core/TaskManager.h"
+#include "AppConfig.h"
 
 TaskHandle_t TaskManager::networkTaskHandle = nullptr;
 
@@ -23,9 +24,7 @@ void TaskManager::begin(
     otaService = ota;
     gpsSensor = gps;
 
-    started = true;
-
-    BaseType_t result = xTaskCreatePinnedToCore(
+    BaseType_t networkResult = xTaskCreatePinnedToCore(
         networkTask,
         "NetworkTask",
         8192,
@@ -35,8 +34,9 @@ void TaskManager::begin(
         0
     );
 
-    if (result == pdPASS)
+    if (networkResult == pdPASS)
     {
+        started = true;
         Serial.println("[TaskManager] Network task started on Core 0");
     }
     else
@@ -47,6 +47,7 @@ void TaskManager::begin(
 
 void TaskManager::update()
 {
+    // Reserved for future task health checks.
 }
 
 void TaskManager::networkTask(void* parameter)
@@ -70,6 +71,6 @@ void TaskManager::networkTask(void* parameter)
             gpsSensor->update();
         }
 
-        vTaskDelay(pdMS_TO_TICKS(5));
+        vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
