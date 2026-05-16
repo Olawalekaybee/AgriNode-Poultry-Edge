@@ -45,16 +45,20 @@ void PoultryMonitorApp::begin()
     Serial.println("[APP] Starting OTA...");
     ota.begin();
 
+    Serial.println("[APP] Starting Task Manager...");
+    TaskManager::begin(
+        &mqtt,
+        &ota,
+        &gps
+    );
+
     Serial.println("[APP] System initialized successfully.");
     Serial.println("======================================");
 }
 
 void PoultryMonitorApp::update()
 {
-    ota.update();
-
-    mqtt.update();
-    gps.update();
+    TaskManager::update();
 
     unsigned long now = millis();
 

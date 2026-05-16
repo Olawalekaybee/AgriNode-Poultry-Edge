@@ -16,6 +16,7 @@
 #include "cloud/MQTTService.h"
 
 #include "ota/OTAService.h"
+#include "core/TaskManager.h"
 
 class PoultryMonitorApp {
 public:
