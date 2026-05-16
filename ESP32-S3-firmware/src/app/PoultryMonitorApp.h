@@ -10,6 +10,7 @@
 #include "sensors/GPSSensor.h"
 #include "display/DisplayBridge.h"
 #include "cloud/FirebaseService.h"
+#include "cloud/MQTTService.h"
 
 class PoultryMonitorApp {
 public:
@@ -25,10 +26,12 @@ private:
     GPSSensor gps;
     DisplayBridge display;
     FirebaseService firebase;
+    MQTTService mqtt;
 
     unsigned long lastSensorRead = 0;
     unsigned long lastDisplayUpdate = 0;
     unsigned long lastFirebaseUpload = 0;
+    unsigned long lastMqttPublish = 0;
 
     void readSensors();
 };
